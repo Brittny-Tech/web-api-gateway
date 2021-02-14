@@ -1,0 +1,18 @@
+services:
+  redis:
+    image: redis
+    container_name: cache
+    expose:
+      - 6379
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    ports:
+      - 3000:3000
+    links: 
+      - redis
+    command:
+      sh -c 'npm i && node index.js'
