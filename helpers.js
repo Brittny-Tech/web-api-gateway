@@ -8,12 +8,8 @@ let generateContactForm = (subject, html, from) => {
     return bodyFormData
 }
 
-let checkResponse = (data, expectKey, expectValue, ctx, next) => {
+let checkResponse = (data, expectKey, expectValue) => {
     if(!data || !data[expectKey] || data[expectKey] !== expectValue) {
-        ctx.body = {
-        success : false,
-        data
-        };
         return false
     } return true
 }

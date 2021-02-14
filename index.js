@@ -90,10 +90,10 @@ router
     the mailgun response. It is used for the contact section 
     of the web app */
     .post('/contact', middleware.checkBodyParamsDefined(["subject", "html", "from"]), async (ctx, next) => {
-
-        let subject = ctx.request.body.subject;
-        let html = ctx.request.body.html;
-        let from = ctx.request.body.from;
+        let body = ctx.request.body;//JSON.parse(ctx.request.rawBody); //otherwise malformatted
+        let subject = body.subject;
+        let html = body.html;
+        let from = body.from;
 
         let bodyFormData = helpers.generateContactForm(subject, html, from);
 
@@ -103,14 +103,12 @@ router
                 headers: bodyFormData.getHeaders()
             });
 
-        let data = res.data;
+        let data = JSON.parse(res.data);
 
-        if (helpers.checkResponse(data, "message", "Queued. Thank you.", ctx)) {
-            ctx.body = {
-                success: true,
-                data
-            };
-        }
+        ctx.body = {
+            success: helpers.checkResponse(data, "message", "Queued. Thank you."),
+            data
+        };
 
     });
 
